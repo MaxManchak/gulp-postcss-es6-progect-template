@@ -55,107 +55,124 @@ var path = {
   clean: './build'
 };
 
-
 var config = {
   server: {
     baseDir: 'build/'
   },
   port: 80,
   // open: "external",
-  tunnel: 'maxmanchak-private',
+  // tunnel: 'maxmanchak-private',
   logPrefix: 'Frontend_Devil',
   browser: 'google chrome',
   notify: true
 };
 
-
 //                                              CSS
-gulp.task('css', function () {
-  return gulp.src(path.src.style, {
+gulp.task('css', function() {
+  return gulp
+    .src(path.src.style, {
       // since: gulp.lastRun('css')
     })
-    .pipe(postcss([
-      smartImport(),
-      nested(),
-      simpleVars(),
-      mixins(),
-      moveMQ(),
-      autoprefixer({
-        browsers: ['last 10 version']
-      }),
-      // cssnano(),
-    ]))
+    .pipe(
+      postcss([
+        smartImport(),
+        nested(),
+        simpleVars(),
+        mixins(),
+        moveMQ(),
+        autoprefixer({
+          browsers: ['last 10 version']
+        })
+        // cssnano(),
+      ])
+    )
     .pipe(gulp.dest(path.build.style));
 });
 
 //                                            HTML
-gulp.task('html', function () {
-  return gulp.src(path.src.html, {
-      since: gulp.lastRun('html')
-    })
-    .pipe(fileinclude({
-      prefix: '@@',
-      basepath: '@file'
-    }))
-    // .pipe(rigger())
-    .pipe(gulp.dest(path.build.html));
+gulp.task('html', function() {
+  return (
+    gulp
+      .src(path.src.html, {
+        since: gulp.lastRun('html')
+      })
+      .pipe(
+        fileinclude({
+          prefix: '@@',
+          basepath: '@file'
+        })
+      )
+      // .pipe(rigger())
+      .pipe(gulp.dest(path.build.html))
+  );
 });
 
 //                                            JavaScript
-gulp.task('js', function () {
-  return gulp.src(path.src.js, {
-      since: gulp.lastRun('js')
-    })
-    .pipe(fileinclude({
-      prefix: '@@',
-      basepath: '@file'
-    }))
-    // .pipe(rigger())
-    .pipe(uglify())
-    .pipe(gulp.dest(path.build.js));
+gulp.task('js', function() {
+  return (
+    gulp
+      .src(path.src.js, {
+        since: gulp.lastRun('js')
+      })
+      .pipe(
+        fileinclude({
+          prefix: '@@',
+          basepath: '@file'
+        })
+      )
+      // .pipe(rigger())
+      .pipe(uglify())
+      .pipe(gulp.dest(path.build.js))
+  );
 });
 
-gulp.task('jslib', function () {
-  return gulp.src(path.src.jslib, {
-      since: gulp.lastRun('jslib')
-    })
-    // .pipe(uglify())
-    .pipe(gulp.dest(path.build.js));
+gulp.task('jslib', function() {
+  return (
+    gulp
+      .src(path.src.jslib, {
+        since: gulp.lastRun('jslib')
+      })
+      // .pipe(uglify())
+      .pipe(gulp.dest(path.build.js))
+  );
 });
 
 //                                            Image
-gulp.task('image', function () {
-  return gulp.src(path.src.img, {
+gulp.task('image', function() {
+  return gulp
+    .src(path.src.img, {
       since: gulp.lastRun('image')
     })
     .pipe(newer(path.build.img))
-    .pipe(imagemin({
-      optimizationLevel: 6
-    }))
+    .pipe(
+      imagemin({
+        optimizationLevel: 6
+      })
+    )
     .pipe(gulp.dest(path.build.img));
 });
 
 //                  fonts
-gulp.task('fonts', function () {
-  return gulp.src(path.src.fonts, {
+gulp.task('fonts', function() {
+  return gulp
+    .src(path.src.fonts, {
       since: gulp.lastRun('fonts')
     })
     .pipe(gulp.dest(path.build.fonts));
 });
 
+gulp.task(
+  'build',
+  gulp.parallel('html', 'js', 'jslib', 'css', 'image', 'fonts')
+);
 
-
-
-gulp.task('build', gulp.parallel('html', 'js', 'jslib', 'css', 'image', 'fonts'));
-
-
-gulp.task('webserver', function () {
+gulp.task('webserver', function() {
   browserSync.init(config);
   browserSync.watch('build/**/*.*').on('change', browserSync.reload);
 });
 
 //                                             Watcher
-gulp.task('watch', function () {
+gulp.task('watch', function() {
   gulp.watch([path.watch.html], gulp.parallel('html'));
   gulp.watch([path.watch.style], gulp.parallel('css'));
   gulp.watch([path.watch.js], gulp.parallel('js'));
@@ -163,6 +180,5 @@ gulp.task('watch', function () {
   gulp.watch([path.watch.img], gulp.parallel('image'));
   gulp.watch([path.watch.fonts], gulp.parallel('fonts'));
 });
-
 
 gulp.task('default', gulp.parallel('build', 'webserver', 'watch'));
