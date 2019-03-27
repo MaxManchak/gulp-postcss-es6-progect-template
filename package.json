@@ -10,9 +10,7 @@
 		"type": "git",
 		"url": ""
 	},
-	"keywords": [
-		"CV"
-	],
+	"keywords": ["CV"],
 	"author": "Max Manchak",
 	"license": "ISC",
 	"homepage": "maxmanchak.com",
@@ -37,6 +35,7 @@
 		"gulp-rigger": "",
 		"gulp-uglify": "",
 		"imagemin-webp": "",
+		"gulp-webp": "",
 		"postcss-mixins": "",
 		"postcss-move-media": "",
 		"postcss-nested": "",
